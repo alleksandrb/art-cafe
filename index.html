@@ -30,6 +30,11 @@
             height: 40px; padding: 10px; border-radius: 8px;
         }
         .display_none{display: none;}
+        .red_border{border: 1px solid red;}
+        .message_window_on_input{
+            position: absolute; left: 0%; top: 0%; background-color: burlywood; border-radius: 10px;
+            padding: 2px;
+        }
     </style>
 </head>
 <body>
@@ -42,7 +47,7 @@
             Войти
         </button>
         <form class="auth_input display_none" style="position:relative;">
-            <div style="position: absolute;"></div>
+            <div class="message_window_on_input display_none"></div>
             <input name="nickname" type="text" placeholder="nickname">
             <input name="password" placeholder="password">
             <input name="action" value="" class="display_none">
@@ -75,6 +80,7 @@
         const actionInput = document.querySelector("input[name='action']")
         const loginButt = document.querySelector(".login_btn[data='in']")
         const logOutButt = document.querySelector(".login_btn[data='out']")
+        const messageWindow = document.querySelector(".message_window_on_input")
 
         loginButt.onclick = () => {
             if (actionInput.getAttribute('value') != "login"){
@@ -88,11 +94,11 @@
                 for (let i=0; i<authInps.length; i++){
                     if(!authInps[i].value) {
                         action = "emptyInput"
-                        authInps[i].style.border = '1px solid red' 
+                        authInps[i].classList.add("red_border")
+                        authInps[i].addEventListener('input', () => {
+                            if(authInps[i].value) authInps[i].classList.remove("red_border")
+                        }) 
                     }
-                }
-                if (action==="emptyInput") {
-                    // alert('напишите самфинг в инпут')
                 }
                 if (action==="goToServer") {
                     fetch('/server/auth.php',{
@@ -101,14 +107,15 @@
                     })
                     .then( response => {return response.text()})
                     .then( text => {
-                        if(text==="true") {
+                        if ( text==="true" ) {
                             authButt.remove()
                             authInpBlock.remove()
                             loginButt.textContent = "Выйти"
                             loginButt.setAttribute("data","out")
-                        }
-                        if(text==="this user no exist"){
-                            
+                        } 
+                        if ( text==="this user no exist" ) { 
+                            messageWindow.classList.remove("display_none")
+                            messageWindow.textContent = "тебя не существует"
                         }
                     })
 
