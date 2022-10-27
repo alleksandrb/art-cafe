@@ -16,7 +16,7 @@ function logIn() {
     $user = mysqli_fetch_assoc($res);
     if ( !$user ) return "this user no exist";
     if ( $user["password"] === $password ) {
-        setcookie("nick",$nickname);
+        setcookie("nick",$nickname,time()+60*60*24*30);
         return "true";
     }else return "false";
 }
@@ -39,7 +39,8 @@ function dataBase() {
     $db_conf = [
         "host" => "localhost",
         "user" => "root",
-        "pass" => "",
+        // "pass" => "",
+        "pass" => "root",
         "name" => "art-cafe"
     ];
     return mysqli_connect($db_conf["host"],$db_conf["user"],$db_conf["pass"],$db_conf["name"]);
