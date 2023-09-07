@@ -1,2 +1,2 @@
 # art-cafe
-рандомное рисование картинок
+javaScript Canvas Experience
