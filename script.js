@@ -1,101 +1,4 @@
 
-        const authButt = document.querySelector(".auth_btn")
-        const authInpBlock = document.querySelector(".auth_input")
-        const authInps = document.querySelectorAll(".auth_input input")
-        const actionInput = document.querySelector("input[name='action']")
-        const passwordInput = document.querySelector("input[name='password']")
-        const loginButt = document.querySelector(".login_btn[data='in']")
-        const logOutButt = document.querySelector(".login_btn[data='out']")
-        const messageWindow = document.querySelector(".message_window_on_input")
-
-        loginButt.onclick = () => {
-            if (actionInput.getAttribute('value') != "login") {
-                actionInput.setAttribute('value', 'login')
-            }
-            if (authInpBlock.classList.contains("display_none"))
-                authInpBlock.classList.remove("display_none")
-            else {
-                const data = document.querySelector('.auth_input')
-                let action = "goToServer"
-                for (let i = 0; i < authInps.length; i++) {
-                    if (!authInps[i].value) {
-                        action = "emptyInput"
-                        authInps[i].classList.add("red_border")
-                        authInps[i].addEventListener('input', () => {
-                            if (authInps[i].value) authInps[i].classList.remove("red_border")
-                        })
-                    }
-                }
-                if (action === "goToServer") {
-                    fetch('server/auth.php', {
-                        method: "post",
-                        body: new FormData(data)
-                    })
-                        .then(response => { return response.text() })
-                        .then(text => {
-                            if (text === "true") {
-                                authButt.remove()
-                                authInpBlock.remove()
-                                loginButt.textContent = "Выйти"
-                                loginButt.setAttribute("data", "out")
-                            }
-                            else {
-                                messageWindow.classList.remove("display_none")
-                                if (text === "this user no exist") messageWindow.textContent = "тебя не существует"
-                                if (text === "false") {
-                                    messageWindow.textContent = "пароль неверный"
-                                    passwordInput.classList.add('red_border')
-                                    passwordInput.oninput = () => { passwordInput.classList.remove('red_border') }
-                                }
-                                authInps.forEach(it => {
-                                    it.addEventListener('click', () => {
-                                        if (!messageWindow.classList.contains("display_none"))
-                                            messageWindow.classList.add("display_none")
-                                    })
-                                })
-                            }
-                        })
-
-                }
-            }
-        }
-
-        authButt.onclick = () => {
-            if (actionInput.getAttribute('value') != "signin") {
-                actionInput.setAttribute('value', 'signin')
-            }
-            if (authInpBlock.classList.contains("display_none")) {
-                authInpBlock.classList.remove("display_none")
-            }
-            else {
-                const data = document.querySelector('.auth_input')
-                let action = "goToServer"
-                for (let i = 0; i < authInps.length; i++) {
-                    if (!authInps[i].value) action = "emptyInput"
-                }
-                if (action === "emptyInput") {
-                    alert('напишите самфинг в инпут')
-                }
-                if (action === "goToServer") {
-                    fetch('/server/auth.php', {
-                        method: "post",
-                        body: new FormData(data)
-                    })
-                        .then(response => { return response.text() })
-                        .then(text => {
-                            if (text === "user add to table") {
-                                console.log("text")
-                                authInpBlock.classList.add("display_none")
-                            }
-                            if (text === "nickname is exist") {
-                                console.log("такой ник уже экзист")
-                            }
-                        })
-
-                }
-            }
-        }
-
         const NextPictureSecond = 10;
         let storage = [];
         let IdStorage = 0;
@@ -197,6 +100,7 @@
             }
             if (process.textContent === 'Process') {
                 process.textContent = 'Stop'
+                artist(cs, canvas, coors)
                 sIId = setInterval(() => artist(cs, canvas, coors), NextPictureSecond + '000')
             }
         }
